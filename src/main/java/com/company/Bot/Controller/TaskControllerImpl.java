@@ -62,35 +62,30 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public Task getTask(String name) {
-        int count = 0;
-        Task result = null;
+    public List<Task> getTask(String name) {
+        ArrayList<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
             if (task.getName().equals(name)) {
-                count++;
-                result = task;
+                result.add(task);
             }
         }
 
-        if (count == 1) return result;
-        else return null;
+        return result;
     }
 
     @Override
-    public Task getTask(long id) {
-        int count = 0;
-        Task result = null;
+    public List<Task> getTask(long id) {
+        ArrayList<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
             if (task.getId() == id) {
-                count++;
-                result = task;
+                result.add(task);
+                return result;
             }
         }
 
-        if (count == 1) return result;
-        else return null;
+        return result;
     }
 
     @Override

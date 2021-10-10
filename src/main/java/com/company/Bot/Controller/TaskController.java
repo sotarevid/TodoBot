@@ -34,16 +34,16 @@ public interface TaskController {
     /**
      * Получает задачу по её имени
      * @param name имя задачи
-     * @return объект - искомая задача
+     * @return список со всеми подходящими задачами
      */
-    Task getTask(String name);
+    List<Task> getTask(String name);
 
     /**
      * Получает задачу по её id
      * @param id имя задачи
-     * @return объект - искомая задача
+     * @return список со всеми подходящими задачами
      */
-    Task getTask(long id);
+    List<Task> getTask(long id);
 
     /**
      * Получает список всех задач
