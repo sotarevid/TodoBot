@@ -1,4 +1,4 @@
-package com.company;
+package com.company.Dialogue;
 
 import com.company.Bot.Controller.TaskControllerImpl;
 import com.company.Bot.Model.Task;
@@ -66,22 +66,14 @@ public class Dialogue {
                     if (tasks.size() == 0) System.out.println("Не было найдено задач в данной категории");
                     else {
                         System.out.println("Вот список всех задач в категории: \n");
-                        for (Task task : tasks) {
-                            System.out.println("Название: " + task.getName());
-                            System.out.println("Описание: " + task.getDescription());
-                            System.out.println("Категория: " + task.getCategory() + "\n");
-                        }
+                        printTasks(tasks, false);
                     }
                 }
                 case ("4") -> {
                     System.out.println("Вот список всех задач:");
                     List<Task> tasks = taskController.getAllTasks();
                     System.out.println("Вот список всех задач в категории: \n");
-                    for (Task task : tasks) {
-                        System.out.println("Название: " + task.getName());
-                        System.out.println("Описание: " + task.getDescription());
-                        System.out.println("Категория: " + task.getCategory() + "\n");
-                    }
+                    printTasks(tasks, false);
                 }
                 case ("5") -> {
                     System.out.println("Введи название задачи");
@@ -103,20 +95,12 @@ public class Dialogue {
         }
     }
 
-    private static void printTasks(List<Task> tasksDescription, boolean id) {
-        if (id) {
-            for (Task task : tasksDescription) {
-                System.out.println("ID: " + task.getId());
-                System.out.println("Название: " + task.getName());
-                System.out.println("Описание: " + task.getDescription());
-                System.out.println("Категория: " + task.getCategory() + "\n");
-            }
-        } else {
-            for (Task task : tasksDescription) {
-                System.out.println("Название: " + task.getName());
-                System.out.println("Описание: " + task.getDescription());
-                System.out.println("Категория: " + task.getCategory() + "\n");
-            }
+    private static void printTasks(List<Task> tasksDescription, boolean printID) {
+        for (Task task : tasksDescription) {
+            if (printID) System.out.println("ID: " + task.getId());
+            System.out.println("Название: " + task.getName());
+            System.out.println("Описание: " + task.getDescription());
+            System.out.println("Категория: " + task.getCategory() + "\n");
         }
     }
 }
