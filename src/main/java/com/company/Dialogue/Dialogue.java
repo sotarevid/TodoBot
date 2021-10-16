@@ -12,20 +12,12 @@ public class Dialogue {
     public static void execute() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         TaskControllerImpl taskController = new TaskControllerImpl();
-        System.out.println("""
-                Привет, я ToDoBot и вот что я умею:\s
-                1. Записывать задачи, о которых тебе важно помнить\s
-                Подразделять их на категории, добавлять им описания\s
-                2. Удалять уже имеющиеся записи
-                3. Показывать все задачи в категории
-                4. Показывать полный список записей
-                5. Показывать подробное описание одной задачи
-                Для выполнения команды введи ее номер, для выхода - exit""");
+        printHelp();
         boolean condition = true;
         while (condition) {
             String input = br.readLine();
             switch (input) {
-                case ("1") -> {
+                case "1" -> {
                     System.out.println("Введи название задания");
                     String name = br.readLine();
                     System.out.println("Введи описание");
@@ -34,7 +26,7 @@ public class Dialogue {
                     String category = br.readLine();
                     taskController.createTask(name, description, category);
                 }
-                case ("2") -> {
+                case "2" -> {
                     System.out.println("Введи название задачи, которую нужно удалить");
                     String name = br.readLine();
                     List<Task> tasksToDel = taskController.getTask(name);
@@ -59,7 +51,7 @@ public class Dialogue {
 
                     }
                 }
-                case ("3") -> {
+                case "3" -> {
                     System.out.println("Введи категорию, которую хочешь посмотреть");
                     String category = br.readLine();
                     List<Task> tasks = taskController.getAllTasksInCategory(category);
@@ -69,13 +61,13 @@ public class Dialogue {
                         printTasks(tasks, false);
                     }
                 }
-                case ("4") -> {
+                case "4" -> {
                     System.out.println("Вот список всех задач:");
                     List<Task> tasks = taskController.getAllTasks();
                     System.out.println("Вот список всех задач в категории: \n");
                     printTasks(tasks, false);
                 }
-                case ("5") -> {
+                case "5" -> {
                     System.out.println("Введи название задачи");
                     String name = br.readLine();
                     List<Task> tasksDescription = taskController.getTask(name);
@@ -90,7 +82,9 @@ public class Dialogue {
                     }
 
                 }
-                case ("exit") -> condition = false;
+                case "exit" -> condition = false;
+                case "help" -> printHelp();
+                default -> System.out.println("Неверный код команды, для помощи введите help");
             }
         }
     }
@@ -102,5 +96,17 @@ public class Dialogue {
             System.out.println("Описание: " + task.getDescription());
             System.out.println("Категория: " + task.getCategory() + "\n");
         }
+    }
+
+    private static void printHelp(){
+        System.out.println("""
+                Привет, я ToDoBot и вот что я умею:\s
+                1. Записывать задачи, о которых тебе важно помнить\s
+                Подразделять их на категории, добавлять им описания\s
+                2. Удалять уже имеющиеся записи
+                3. Показывать все задачи в категории
+                4. Показывать полный список записей
+                5. Показывать подробное описание одной задачи
+                Для выполнения команды введи ее номер, для выхода - exit""");
     }
 }
