@@ -24,15 +24,15 @@ public class Dialogue {
                     String description = br.readLine();
                     System.out.println("К какой категории его отнести?");
                     String category = br.readLine();
-                    taskController.createTask(name, description, category);
+                    taskController.create(name, description, category);
                 }
                 case "2" -> {
                     System.out.println("Введи название задачи, которую нужно удалить");
                     String name = br.readLine();
-                    List<Task> tasksToDel = taskController.getTask(name);
+                    List<Task> tasksToDel = taskController.get(name);
                     if (tasksToDel.size() == 0) System.out.println("Не было найдено задач с подобным именем");
                     else if (tasksToDel.size() == 1) {
-                        taskController.deleteTask(tasksToDel.get(0).getName());
+                        taskController.delete(tasksToDel.get(0).getName());
                         System.out.println("Успешно удалено");
                     } else {
                         System.out.println("Было найдено более одной задачи с этим именем\n" +
@@ -41,10 +41,10 @@ public class Dialogue {
                         long id = Long.parseLong(br.readLine());
                         if (id == 0) {
                             for (Task task : tasksToDel) {
-                                taskController.deleteTask(task.getId());
+                                taskController.delete(task.getId());
                             }
-                        } else if (taskController.getTask(id).get(0).getName().equals(name)) {
-                            taskController.deleteTask(id);
+                        } else if (taskController.get(id).get(0).getName().equals(name)) {
+                            taskController.delete(id);
 
                         } else System.out.println("Неверно введён ID");
                         System.out.println("Успешно удалено");
@@ -54,7 +54,7 @@ public class Dialogue {
                 case "3" -> {
                     System.out.println("Введи категорию, которую хочешь посмотреть");
                     String category = br.readLine();
-                    List<Task> tasks = taskController.getAllTasksInCategory(category);
+                    List<Task> tasks = taskController.getAllInCategory(category);
                     if (tasks.size() == 0) System.out.println("Не было найдено задач в данной категории");
                     else {
                         System.out.println("Вот список всех задач в категории: \n");
@@ -63,14 +63,14 @@ public class Dialogue {
                 }
                 case "4" -> {
                     System.out.println("Вот список всех задач:");
-                    List<Task> tasks = taskController.getAllTasks();
+                    List<Task> tasks = taskController.getAll();
                     System.out.println("Вот список всех задач в категории: \n");
                     printTasks(tasks, false);
                 }
                 case "5" -> {
                     System.out.println("Введи название задачи");
                     String name = br.readLine();
-                    List<Task> tasksDescription = taskController.getTask(name);
+                    List<Task> tasksDescription = taskController.get(name);
                     if (tasksDescription.size() == 1) {
                         System.out.println("Название: " + tasksDescription.get(0).getName());
                         System.out.println("Описание: " + tasksDescription.get(0).getDescription());

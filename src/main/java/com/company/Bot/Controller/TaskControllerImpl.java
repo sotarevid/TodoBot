@@ -18,13 +18,13 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public void createTask(String name, String description, String category) {
+    public void create(String name, String description, String category) {
         Task newTask = new Task(taskList.size() + 1, name, description, category);
         taskList.add(newTask);
     }
 
     @Override
-    public boolean deleteTask(String name) {
+    public boolean delete(String name) {
         int count = 0;
         int index = 0;
 
@@ -43,7 +43,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public boolean deleteTask(long id) {
+    public boolean delete(long id) {
         int count = 0;
         int index = 0;
 
@@ -62,7 +62,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public List<Task> getTask(String name) {
+    public List<Task> get(String name) {
         ArrayList<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
@@ -75,7 +75,7 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public List<Task> getTask(long id) {
+    public List<Task> get(long id) {
         ArrayList<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
@@ -89,12 +89,12 @@ public class TaskControllerImpl implements TaskController {
     }
 
     @Override
-    public List<Task> getAllTasks() {
+    public List<Task> getAll() {
         return taskList;
     }
 
     @Override
-    public List<Task> getAllTasksInCategory(String category) {
+    public List<Task> getAllInCategory(String category) {
         List<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {

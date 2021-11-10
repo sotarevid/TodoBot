@@ -21,25 +21,25 @@ public class TaskControllerTest {
 
     @Test
     public void shouldCreate() {
-        Assertions.assertTrue(taskController.getAllTasks().isEmpty());
+        Assertions.assertTrue(taskController.getAll().isEmpty());
 
-        taskController.createTask("name", "description", "category");
+        taskController.create("name", "description", "category");
 
-        Assertions.assertFalse(taskController.getAllTasks().isEmpty());
+        Assertions.assertFalse(taskController.getAll().isEmpty());
     }
 
     @Test
     public void shouldGet() {
-        taskController.createTask("name", "description_one", "category");
+        taskController.create("name", "description_one", "category");
 
-        Assertions.assertFalse(taskController.getAllTasks().isEmpty());
+        Assertions.assertFalse(taskController.getAll().isEmpty());
     }
 
     @Test
     public void shouldGetOne() {
-        taskController.createTask("name", "description", "category");
+        taskController.create("name", "description", "category");
 
-        List<Task> actual = taskController.getTask("name");
+        List<Task> actual = taskController.get("name");
 
         Assertions.assertNotNull(actual);
         Assertions.assertFalse(actual.isEmpty());
@@ -53,55 +53,55 @@ public class TaskControllerTest {
 
     @Test
     public void shouldGetSameNames() {
-        taskController.createTask("name", "description_one", "category");
-        taskController.createTask("name", "description_two", "category");
+        taskController.create("name", "description_one", "category");
+        taskController.create("name", "description_two", "category");
 
-        Assertions.assertEquals(2, taskController.getTask("name").size());
+        Assertions.assertEquals(2, taskController.get("name").size());
     }
 
     @Test
     public void shouldGetById() {
-        taskController.createTask("name", "description_one", "category");
-        taskController.createTask("name", "description_two", "category");
+        taskController.create("name", "description_one", "category");
+        taskController.create("name", "description_two", "category");
 
-        Assertions.assertEquals(1, taskController.getTask(1).size());
-        Assertions.assertEquals(1, taskController.getTask(2).size());
+        Assertions.assertEquals(1, taskController.get(1).size());
+        Assertions.assertEquals(1, taskController.get(2).size());
     }
 
     @Test
     public void shouldDelete() {
-        taskController.createTask("name", "description", "category");
-        boolean result = taskController.deleteTask("name");
+        taskController.create("name", "description", "category");
+        boolean result = taskController.delete("name");
 
         Assertions.assertTrue(result);
-        Assertions.assertTrue(taskController.getAllTasks().isEmpty());
+        Assertions.assertTrue(taskController.getAll().isEmpty());
     }
 
     @Test
     public void shouldNotDeleteSameNames() {
-        taskController.createTask("name", "description_one", "category");
-        taskController.createTask("name", "description_two", "category");
-        taskController.deleteTask("name");
+        taskController.create("name", "description_one", "category");
+        taskController.create("name", "description_two", "category");
+        taskController.delete("name");
 
-        Assertions.assertEquals(2, taskController.getAllTasks().size());
+        Assertions.assertEquals(2, taskController.getAll().size());
     }
 
     @Test
     public void shouldDeleteById() {
-        taskController.createTask("name", "description_one", "category");
-        taskController.createTask("name", "description_two", "category");
-        taskController.deleteTask(1);
+        taskController.create("name", "description_one", "category");
+        taskController.create("name", "description_two", "category");
+        taskController.delete(1);
 
-        Assertions.assertEquals(1, taskController.getAllTasks().size());
+        Assertions.assertEquals(1, taskController.getAll().size());
     }
 
     @Test
     public void shouldGetCategory() {
-        taskController.createTask("name", "description", "category_one");
-        taskController.createTask("name", "description", "category_two");
+        taskController.create("name", "description", "category_one");
+        taskController.create("name", "description", "category_two");
 
-        Assertions.assertEquals(1, taskController.getAllTasksInCategory("category_one").size());
-        Assertions.assertEquals(1, taskController.getAllTasksInCategory("category_two").size());
+        Assertions.assertEquals(1, taskController.getAllInCategory("category_one").size());
+        Assertions.assertEquals(1, taskController.getAllInCategory("category_two").size());
     }
 
 
