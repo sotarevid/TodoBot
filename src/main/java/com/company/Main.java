@@ -1,12 +1,15 @@
 package com.company;
 
-import java.io.IOException;
+import com.company.Bot.Controller.ClientController;
+import com.company.Bot.Controller.ConsoleClientController;
+import com.company.Bot.Controller.TaskControllerImpl;
 
-import static com.company.Dialogue.Dialogue.execute;
+import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        execute();
+    public static void main(String[] args) {
+        ConsoleClientController bot = new ConsoleClientController(new TaskControllerImpl());
+        bot.listen();
     }
 }
