@@ -1,6 +1,8 @@
 package com.company.Bot.Model;
 
 
+import java.util.Objects;
+
 /**
  * Класс, описывающий задачу.
  */
@@ -44,5 +46,21 @@ public class Task {
      */
     public String getCategory() {
         return category;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id
+                && name.equals(task.name)
+                && description.equals(task.description)
+                && Objects.equals(category, task.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

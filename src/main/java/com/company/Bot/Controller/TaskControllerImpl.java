@@ -11,53 +11,34 @@ import java.util.Objects;
  */
 public class TaskControllerImpl implements TaskController {
 
-    private final List<Task> taskList;
-
-    public TaskControllerImpl() {
-        taskList = new ArrayList<>();
-    }
+    private final List<Task> taskList = new ArrayList<>();
+    private long nextId = 1;
 
     @Override
     public void create(String name, String description, String category) {
-        Task newTask = new Task(taskList.size() + 1, name, description, category);
+        Task newTask = new Task(nextId++, name, description, category);
         taskList.add(newTask);
     }
 
     @Override
     public boolean delete(String name) {
-        int count = 0;
-        int index = 0;
+        List<Task> possibleTasks = get(name);
 
-        for (int i = 0; i < taskList.size(); i++) {
-            if (taskList.get(i).getName().equals(name)) {
-                count++;
-                index = i;
-            }
-        }
+        if (possibleTasks.size() != 1)
+            return false;
 
-        if (count == 1)
-            taskList.remove(index);
-        else return false;
-
+        taskList.remove(possibleTasks.get(0));
         return true;
     }
 
     @Override
     public boolean delete(long id) {
-        int count = 0;
-        int index = 0;
+        List<Task> possibleTasks = get(id);
 
-        for (int i = 0; i < taskList.size(); i++) {
-            if (taskList.get(i).getId() == id) {
-                count++;
-                index = i;
-            }
-        }
+        if (possibleTasks.size() != 1)
+            return false;
 
-        if (count == 1)
-            taskList.remove(index);
-        else return false;
-
+        taskList.remove(possibleTasks.get(0));
         return true;
     }
 
@@ -81,7 +62,6 @@ public class TaskControllerImpl implements TaskController {
         for (Task task : taskList) {
             if (task.getId() == id) {
                 result.add(task);
-                return result;
             }
         }
 
@@ -98,7 +78,7 @@ public class TaskControllerImpl implements TaskController {
         List<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
-            if (task.getCategory().equals(category)) {
+            if (Objects.equals(category, task.getCategory())) {
                 result.add(task);
             }
         }
