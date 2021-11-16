@@ -1,17 +1,32 @@
 package com.company.Bot.Model;
 
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
 /**
  * Класс, описывающий задачу.
  */
+@Entity
 public class Task {
 
-    private final long id;
-    private final String name;
-    private final String description;
-    private final String category;
+    @Id
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
+    private long id;
+
+    private String name;
+    private String description;
+    private String category;
+
+    public Task(String name, String description, String category) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+    }
 
     public Task(long id, String name, String description, String category) {
         this.id = id;
@@ -19,6 +34,8 @@ public class Task {
         this.description = description;
         this.category = category;
     }
+
+    protected Task() { }
 
     /**
      * @return id задачи, записанной в объекте

@@ -1,5 +1,5 @@
 import com.company.Bot.Controller.TaskController;
-import com.company.Bot.Controller.TaskControllerImpl;
+import com.company.Bot.Controller.ListTaskController;
 import com.company.Bot.Model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,13 +10,13 @@ import java.util.List;
 /**
  * Тесты для интерфейса TaskController
  */
-public class TaskControllerTest {
+public class ListTaskControllerTest {
 
     private TaskController taskController;
 
     @BeforeEach
     public void setupTests() {
-        taskController = new TaskControllerImpl();
+        taskController = new ListTaskController();
     }
 
     @Test

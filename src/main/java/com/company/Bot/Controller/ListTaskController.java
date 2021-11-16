@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * Реализация TaskController, хранящая все задачи в памяти
  */
-public class TaskControllerImpl implements TaskController {
+public class ListTaskController implements TaskController {
 
     private final List<Task> taskList = new ArrayList<>();
     private long nextId = 1;
