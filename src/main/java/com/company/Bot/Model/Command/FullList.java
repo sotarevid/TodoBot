@@ -24,6 +24,9 @@ public class FullList extends Command {
             builder.append(System.lineSeparator());
         }
 
+        if (builder.isEmpty())
+            builder.append("Ничего нет!");
+
         sendMessage(builder.toString());
     }
 }

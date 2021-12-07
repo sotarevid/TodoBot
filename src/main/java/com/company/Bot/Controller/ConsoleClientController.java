@@ -28,6 +28,7 @@ public class ConsoleClientController implements ClientController {
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
+        commands.put("default", new Default(taskController, this));
     }
 
     @Override
@@ -51,8 +52,10 @@ public class ConsoleClientController implements ClientController {
 
     @Override
     public void runCommand(String message) {
-        Command command = commands.get(message);
-        command.execute();
+        if (commands.containsKey(message))
+            commands.get(message).execute();
+        else
+            commands.get("default").execute();
     }
 
     @Override

@@ -28,6 +28,9 @@ public class Category extends Command {
             builder.append(task.getId()).append(": ").append(task.getName()).append(System.lineSeparator());
         }
 
+        if (builder.isEmpty())
+            builder.append("Ничего нет!");
+
         sendMessage(builder.toString());
     }
 }

@@ -3,6 +3,7 @@ package com.company.Bot.Controller;
 import com.company.Bot.Model.Task;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ public class DbTaskController implements TaskController {
 
     private final Session session;
 
-    public DbTaskController(Session session) {
-        this.session = session;
+    public DbTaskController(SessionFactory sessionFactory) {
+        this.session = sessionFactory.openSession();
     }
 
     @Override

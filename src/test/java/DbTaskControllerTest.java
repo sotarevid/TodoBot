@@ -28,7 +28,7 @@ public class DbTaskControllerTest {
         SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         session = sessionFactory.openSession();
 
-        taskController = new DbTaskController(session);
+        taskController = new DbTaskController(sessionFactory);
     }
 
     @AfterEach
