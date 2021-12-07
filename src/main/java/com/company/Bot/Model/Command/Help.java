@@ -11,7 +11,7 @@ public class Help extends Command {
 
     @Override
     public void execute() {
-        sendResponse("""
+        sendMessage("""
                 /help - выводит это сообщение :)
                 /create - создаёт новую задачу
                 /list - показывает список всех задач

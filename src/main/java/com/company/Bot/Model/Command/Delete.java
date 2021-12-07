@@ -14,30 +14,29 @@ public class Delete extends Command {
 
     @Override
     public void execute() {
-        clientController.sendMessage("Удалить задачу по id или названию? [I]d/[N]ame: ");
-        String response = clientController.getNextMessage().toLowerCase();
+        sendMessage("Удалить задачу по id или названию? [I]d/[N]ame: ");
+        String response = getNextMessage().toLowerCase();
 
         if (response.length() == 0 || (response.toCharArray()[0] != 'i' && response.toCharArray()[0] != 'n'))
             return;
 
         boolean usingId = response.toCharArray()[0] == 'i';
         if (usingId) {
-            sendResponse("Введите id: ");
-            if (taskController.delete(Long.parseLong(clientController.getNextMessage())))
-                sendResponse("Удалил!");
+            sendMessage("Введите id: ");
+            if (taskController.delete(userId, Long.parseLong(getNextMessage())))
+                sendMessage("Удалил!");
             else
-                sendResponse("Не нашёл такую задачу :(");
+                sendMessage("Не нашёл такую задачу :(");
         }
         else {
-            sendResponse("Введите имя:");
-            response = clientController.getNextMessage();
-            if (taskController.delete(response))
-                sendResponse("Удалил!");
+            sendMessage("Введите имя:");
+            response = getNextMessage();
+            if (taskController.delete(userId, response))
+                sendMessage("Удалил!");
             else {
-                List<Task> tasks = taskController.get(response);
+                List<Task> tasks = taskController.get(userId, response);
                 if (tasks.size() > 0) {
                     StringBuilder builder = new StringBuilder();
-                    int i = 0;
 
                     for (Task task : tasks) {
                         builder.append(task.getId()).append(": ").append(task.getName());
@@ -46,16 +45,16 @@ public class Delete extends Command {
                         builder.append(System.lineSeparator());
                     }
 
-                    sendResponse(builder.toString());
-                    sendResponse("Выберите нужную задачу по id: ");
+                    sendMessage(builder.toString());
+                    sendMessage("Выберите нужную задачу по id: ");
 
-                    if (taskController.delete(Long.parseLong(clientController.getNextMessage())))
-                        sendResponse("Удалил!");
+                    if (taskController.delete(userId, Long.parseLong(getNextMessage())))
+                        sendMessage("Удалил!");
                     else
-                        sendResponse("Не нашёл такую задачу :(");
+                        sendMessage("Не нашёл такую задачу :(");
                 }
                 else {
-                    sendResponse("Не нашёл такую задачу :(");
+                    sendMessage("Не нашёл такую задачу :(");
                 }
             }
         }

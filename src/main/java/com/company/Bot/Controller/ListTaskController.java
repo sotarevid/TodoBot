@@ -15,14 +15,17 @@ public class ListTaskController implements TaskController {
     private long nextId = 1;
 
     @Override
-    public void create(String name, String description, String category) {
-        Task newTask = new Task(nextId++, name, description, category);
-        taskList.add(newTask);
+    public void create(long userId, String name, String description, String category) {
+        taskList.add(new Task()
+                .setId(nextId++)
+                .setName(name)
+                .setDescription(description)
+                .setCategory(category));
     }
 
     @Override
-    public boolean delete(String name) {
-        List<Task> possibleTasks = get(name);
+    public boolean delete(long userId, String name) {
+        List<Task> possibleTasks = get(userId, name);
 
         if (possibleTasks.size() != 1)
             return false;
@@ -32,8 +35,8 @@ public class ListTaskController implements TaskController {
     }
 
     @Override
-    public boolean delete(long id) {
-        List<Task> possibleTasks = get(id);
+    public boolean delete(long userId, long id) {
+        List<Task> possibleTasks = get(userId, id);
 
         if (possibleTasks.size() != 1)
             return false;
@@ -43,7 +46,7 @@ public class ListTaskController implements TaskController {
     }
 
     @Override
-    public List<Task> get(String name) {
+    public List<Task> get(long userId, String name) {
         ArrayList<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
@@ -56,7 +59,7 @@ public class ListTaskController implements TaskController {
     }
 
     @Override
-    public List<Task> get(long id) {
+    public List<Task> get(long userId, long id) {
         ArrayList<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {
@@ -69,12 +72,12 @@ public class ListTaskController implements TaskController {
     }
 
     @Override
-    public List<Task> getAll() {
+    public List<Task> getAll(long userId) {
         return taskList;
     }
 
     @Override
-    public List<Task> getAllInCategory(String category) {
+    public List<Task> getAllInCategory(long userId, String category) {
         List<Task> result = new ArrayList<>();
 
         for (Task task : taskList) {

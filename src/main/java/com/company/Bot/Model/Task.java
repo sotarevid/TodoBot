@@ -17,31 +17,36 @@ public class Task {
     @GeneratedValue(generator="increment")
     @GenericGenerator(name="increment", strategy = "increment")
     private long id;
+    private long userId;
 
     private String name;
     private String description;
     private String category;
 
-    public Task(String name, String description, String category) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
-    }
-
-    public Task(long id, String name, String description, String category) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-    }
-
-    protected Task() { }
+    public Task() { }
 
     /**
      * @return id задачи, записанной в объекте
      */
     public long getId() {
         return id;
+    }
+
+    public Task setId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    /**
+     * @return id пользователя, которому присвоена задача
+     */
+    public long getUserId() {
+        return userId;
+    }
+
+    public Task setUserId(long userId) {
+        this.userId = userId;
+        return this;
     }
 
     /**
@@ -51,6 +56,11 @@ public class Task {
         return name;
     }
 
+    public Task setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     /**
      * @return подробный текст задачи, записанной в объекте
      */
@@ -58,11 +68,21 @@ public class Task {
         return description;
     }
 
+    public Task setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     /**
      * @return категория, к которой принадлежит задача
      */
     public String getCategory() {
         return category;
+    }
+
+    public Task setCategory(String category) {
+        this.category = category;
+        return this;
     }
 
     @Override
