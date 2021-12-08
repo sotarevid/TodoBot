@@ -8,12 +8,26 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
 
     public static void main(String[] args) {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure()
-                .build();
+        StandardServiceRegistry registry;
+
+        Map<String,String> jdbcUrlSettings = new HashMap<>();
+        String jdbcDbUrl = System.getenv("JDBC_DATABASE_URL");
+        if (null != jdbcDbUrl) {
+            jdbcUrlSettings.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
+        }
+
+        registry = new StandardServiceRegistryBuilder().
+                configure("hibernate.cfg.xml").
+                applySettings(jdbcUrlSettings).
+                build();
+
+
         SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         TelegramBot bot = new TelegramBot(sessionFactory);
         bot.connect();
