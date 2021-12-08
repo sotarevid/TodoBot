@@ -50,7 +50,7 @@ public class DbTaskController implements TaskController {
 
         if (task != null && task.getUserId() == userId) {
             session.beginTransaction();
-            session.createQuery(String.format("DELETE FROM Task WHERE id=%d", id)).executeUpdate();
+            session.delete(task);
             session.getTransaction().commit();
             return true;
         }
