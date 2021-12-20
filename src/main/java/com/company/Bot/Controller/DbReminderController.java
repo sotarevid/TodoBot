@@ -1,30 +1,30 @@
 package com.company.Bot.Controller;
 
 import com.company.Bot.Model.Reminder;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Example;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DbReminderController implements ReminderController {
 
     private final Session session;
-    private List<Reminder> allReminders;
+    private final List<Reminder> allReminders = new ArrayList<>();
 
     public DbReminderController(SessionFactory sessionFactory) {
         this.session = sessionFactory.openSession();
+        updateList();
     }
 
     private void updateList() {
-        Reminder reminder = new Reminder();
+        List<Reminder> result = session.createQuery("select r from Reminder r", Reminder.class).list();
 
-        Example example = Example.create(reminder);
-
-        Criteria criteria = session.createCriteria(Reminder.class).add(example);
-        allReminders = criteria.list();
+        synchronized (allReminders) {
+            allReminders.clear();
+            allReminders.addAll(result);
+        }
     }
 
     @Override
@@ -38,8 +38,6 @@ public class DbReminderController implements ReminderController {
 
         session.save(reminder);
         session.getTransaction().commit();
-
-        updateList();
     }
 
     @Override
@@ -50,8 +48,6 @@ public class DbReminderController implements ReminderController {
             session.beginTransaction();
             session.delete(reminder);
             session.getTransaction().commit();
-
-            updateList();
 
             return true;
         }
@@ -72,6 +68,9 @@ public class DbReminderController implements ReminderController {
 
     @Override
     public List<Reminder> getAll() {
-        return allReminders;
+        updateList();
+        synchronized (allReminders) {
+            return new ArrayList<>(allReminders);
+        }
     }
 }

@@ -26,6 +26,21 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public TelegramBot(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+
+        startReminderWorker();
+    }
+
+    private void startReminderWorker() {
+        DbReminderController workerReminderController = new DbReminderController(sessionFactory);
+
+        TelegramClientController workerClientController = new TelegramClientController(
+                new DbTaskController(sessionFactory),
+                workerReminderController,
+                this
+        );
+
+        ReminderWorker reminderWorker = new ReminderWorker(workerReminderController, workerClientController);
+        new Thread(reminderWorker::execute).start();
     }
 
     /**

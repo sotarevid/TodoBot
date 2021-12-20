@@ -21,11 +21,19 @@ public class ReminderWorker {
         while (true) {
             List<Reminder> reminders = reminderController.getAll();
 
-            for (Reminder reminder : reminders) {
-                if (reminder.getDatetime().compareTo(Instant.now().plusMillis(deviation)) <= 0) {
-                    clientController.sendMessage(reminder.getUserId(), reminder.getText());
-                    reminderController.delete(reminder.getUserId(), reminder.getId());
+            if (reminders != null && reminders.size() > 0) {
+                for (Reminder reminder : reminders) {
+                    if (reminder.getDatetime().isBefore(Instant.now().plusMillis(deviation))) {
+                        clientController.sendMessage(reminder.getUserId(), reminder.getText());
+                        reminderController.delete(reminder.getUserId(), reminder.getId());
+                    }
                 }
+            }
+
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

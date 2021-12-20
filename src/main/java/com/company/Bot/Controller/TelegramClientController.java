@@ -8,21 +8,26 @@ import java.util.Map;
 
 public class TelegramClientController implements ClientController {
 
-    private final long userId;
+    private long userId;
     private final TaskController taskController;
     private final ReminderController reminderController;
     private final TelegramBot bot;
     private final Map<String, Command> commands = new HashMap<>();
     private Command defaultCommand;
 
+    public TelegramClientController(TaskController taskController, ReminderController reminderController, TelegramBot bot) {
+        this.taskController = taskController;
+        this.reminderController = reminderController;
+        this.bot = bot;
+
+        setupCommands();
+    }
+
     public TelegramClientController(long userId, TaskController taskController, ReminderController reminderController, TelegramBot bot) {
         this.userId = userId;
         this.taskController = taskController;
         this.reminderController = reminderController;
         this.bot = bot;
-
-        ReminderWorker reminderWorker = new ReminderWorker(reminderController, this);
-        new Thread(reminderWorker::execute).start();
 
         setupCommands();
     }
