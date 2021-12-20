@@ -10,7 +10,7 @@ public class Create extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Введите название задачи: ");
         String name = getNextMessage();
         sendMessage("Введите подробное описание задачи: ");

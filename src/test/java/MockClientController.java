@@ -14,6 +14,8 @@ public class MockClientController implements ClientController {
 
     private final TaskController taskController;
     private final Map<String, Command> commands = new HashMap<>();
+    private Command defaultCommand;
+    private long userID = Long.MAX_VALUE;
 
     public MockClientController(TaskController taskController) {
         this.taskController = taskController;
@@ -32,11 +34,6 @@ public class MockClientController implements ClientController {
     }
 
     @Override
-    public long getUserId() {
-        return 0;
-    }
-
-    @Override
     public String getNextMessage() {
         return inputQueue.poll();
     }
@@ -49,15 +46,20 @@ public class MockClientController implements ClientController {
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
-        commands.put("default", new Default(taskController, this));
+        defaultCommand = new DefaultCommand(taskController, this);
     }
 
     @Override
     public void runCommand(String message) {
         if (commands.containsKey(message))
-            commands.get(message).execute();
+            commands.get(message).execute(userID);
         else
-            commands.get("default").execute();
+            defaultCommand.execute(userID);
+    }
+
+    @Override
+    public void sendMessage(String text) {
+        lastOutput = text;
     }
 
     @Override

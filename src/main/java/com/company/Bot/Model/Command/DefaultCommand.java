@@ -3,14 +3,14 @@ package com.company.Bot.Model.Command;
 import com.company.Bot.Controller.ClientController;
 import com.company.Bot.Controller.TaskController;
 
-public class Default extends Command {
+public class DefaultCommand extends Command {
 
-    public Default(TaskController taskController, ClientController clientController) {
+    public DefaultCommand(TaskController taskController, ClientController clientController) {
         super(taskController, clientController);
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Не понял. Может, стоит попробовать /help? :)");
     }
 }

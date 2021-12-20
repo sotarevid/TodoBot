@@ -10,7 +10,7 @@ public class Help extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("""
                 /help - выводит это сообщение :)
                 /create - создаёт новую задачу

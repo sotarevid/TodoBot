@@ -13,7 +13,7 @@ public class Delete extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Удалить задачу по id или названию? [I]d/[N]ame: ");
         String response = getNextMessage().toLowerCase();
 

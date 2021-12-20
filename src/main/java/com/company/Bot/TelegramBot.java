@@ -20,8 +20,8 @@ import java.util.Queue;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final String token = "5027949483:AAHDKIejFNZ-UFPvbBxgYl8zomqQwiHrerE";
-    private final String username = "oop_todo_bot";
+    private final String token = System.getenv("TODO_BOT_TOKEN");
+    private final String username = System.getenv("TODO_BOT_USERNAME");
 
     private final Map<Long, Queue<String>> messageQueue = new HashMap<>();
 
@@ -31,6 +31,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Получает следующее сообщение от пользователя по userId
+     */
     public String getMessage(long userId) {
         synchronized (messageQueue) {
             if (messageQueue.containsKey(userId)) {
@@ -63,6 +66,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Отправляет сообщение пользователю по userId
+     * @param userId
+     * @param message
+     */
     public void sendMessage(Long userId, String message) {
         SendMessage response = new SendMessage();
         response.setChatId(userId.toString());
@@ -75,6 +83,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Устанавливает соединение с TelegramAPI и начинает слушать обновления
+     */
     public void connect() {
         TelegramBotsApi telegramBotsApi;
         try {

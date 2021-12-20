@@ -10,7 +10,7 @@ public class Start extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Привет, я Todo-bot! Введи \"/help\", чтобы получить справку.");
     }
 }

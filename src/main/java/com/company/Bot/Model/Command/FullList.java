@@ -13,7 +13,7 @@ public class FullList extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         List<Task> tasks = taskController.getAll(userId);
         StringBuilder builder = new StringBuilder();
 

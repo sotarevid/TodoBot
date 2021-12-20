@@ -12,17 +12,13 @@ public class TelegramClientController implements ClientController {
     private final TaskController taskController;
     private final TelegramBot bot;
     private final Map<String, Command> commands = new HashMap<>();
+    private Command defaultCommand;
 
     public TelegramClientController(long userId, TaskController taskController, TelegramBot bot) {
         this.userId = userId;
         this.taskController = taskController;
         this.bot = bot;
         setupCommands();
-    }
-
-    @Override
-    public long getUserId() {
-        return userId;
     }
 
     @Override
@@ -35,6 +31,9 @@ public class TelegramClientController implements ClientController {
         return result;
     }
 
+    /**
+     * Сохраняет команды для дальнейшей обработки сообщений
+     */
     private void setupCommands() {
         commands.put("/start", new Start(taskController, this));
         commands.put("/help", new Help(taskController, this));
@@ -43,15 +42,20 @@ public class TelegramClientController implements ClientController {
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
-        commands.put("default", new Default(taskController, this));
+        defaultCommand = new DefaultCommand(taskController, this);
     }
 
     @Override
     public void runCommand(String message) {
         if (commands.containsKey(message))
-            commands.get(message).execute();
+            commands.get(message).execute(userId);
         else
-            commands.get("default").execute();
+            defaultCommand.execute(userId);
+    }
+
+    @Override
+    public void sendMessage(String text) {
+        bot.sendMessage(this.userId, text);
     }
 
     @Override

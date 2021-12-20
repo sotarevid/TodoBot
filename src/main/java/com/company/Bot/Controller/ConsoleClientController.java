@@ -9,10 +9,11 @@ import java.util.Scanner;
 
 public class ConsoleClientController implements ClientController {
 
-    private final long userId = Long.MAX_VALUE;
     private final TaskController taskController;
     private final Map<String, Command> commands = new HashMap<>();
     private final Scanner scanner = new Scanner(System.in);
+    private Command defaultCommand;
+    private long userId = Long.MAX_VALUE;
 
     public ConsoleClientController(TaskController taskController) {
         this.taskController = taskController;
@@ -20,6 +21,9 @@ public class ConsoleClientController implements ClientController {
         setupCommands();
     }
 
+    /**
+     * Сохраняет команды для дальнейшей обработки сообщений
+     */
     private void setupCommands() {
         commands.put("/start", new Start(taskController, this));
         commands.put("/help", new Help(taskController, this));
@@ -28,12 +32,7 @@ public class ConsoleClientController implements ClientController {
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
-        commands.put("default", new Default(taskController, this));
-    }
-
-    @Override
-    public long getUserId() {
-        return userId;
+        defaultCommand = new DefaultCommand(taskController, this);
     }
 
     @Override
@@ -41,10 +40,13 @@ public class ConsoleClientController implements ClientController {
         return scanner.nextLine();
     }
 
+    /**
+     * Запускает контроллер для обработки всех поступающих сообщений в цикле
+     */
     public void listen() {
         while (true) {
             runCommand(getNextMessage());
-            sendMessage(userId,System.lineSeparator() + """
+            sendMessage(System.lineSeparator() + """
                     ---------------------------------
                     Жду команду:\040""");
         }
@@ -53,9 +55,14 @@ public class ConsoleClientController implements ClientController {
     @Override
     public void runCommand(String message) {
         if (commands.containsKey(message))
-            commands.get(message).execute();
+            commands.get(message).execute(userId);
         else
-            commands.get("default").execute();
+            defaultCommand.execute(userId);
+    }
+
+    @Override
+    public void sendMessage(String text) {
+        System.out.print(text);
     }
 
     @Override
