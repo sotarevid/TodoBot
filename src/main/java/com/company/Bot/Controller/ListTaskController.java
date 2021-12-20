@@ -18,6 +18,7 @@ public class ListTaskController implements TaskController {
     @Override
     public void create(long userId, String name, String description, String category) {
         Task task = new Task();
+        task.setId(nextId++);
         task.setUserId(userId);
         task.setName(name);
         task.setDescription(description);

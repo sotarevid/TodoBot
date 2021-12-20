@@ -1,8 +1,15 @@
+import com.company.Bot.Controller.ListReminderController;
 import com.company.Bot.Controller.ListTaskController;
+import com.company.Bot.Controller.ReminderController;
 import com.company.Bot.Controller.TaskController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 public class ClientControllerTest {
 
@@ -11,7 +18,8 @@ public class ClientControllerTest {
     @BeforeEach
     public void setupTest() {
         TaskController taskController = new ListTaskController();
-        clientController = new MockClientController(taskController);
+        ReminderController reminderController = new ListReminderController();
+        clientController = new MockClientController(taskController, reminderController);
     }
 
     @Test
@@ -32,7 +40,8 @@ public class ClientControllerTest {
                 /list - показывает список всех задач
                 /category - показывает список всех задач в категории
                 /get - подробно показывает одну задачу
-                /delete - удаляет задачу""", clientController.getLastOutput());
+                /delete - удаляет задачу
+                /remind - создаёт напоминание""", clientController.getLastOutput());
     }
 
     @Test
@@ -128,5 +137,28 @@ public class ClientControllerTest {
 
         clientController.runCommand("/list");
         Assertions.assertEquals("Ничего нет!", clientController.getLastOutput());
+    }
+
+    @Test
+    public void shouldSendReminder() {
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("dd.MM.yyy HH:mm")
+                .withZone(ZoneId.from(ZoneOffset.UTC));
+
+        String time = formatter.format(Instant.now().plusMillis(10 * 1000));
+
+        clientController.setInput("Проверить работу напоминаний", time);
+        clientController.runCommand("/remind");
+
+        clientController.setInput("Проверить работу напоминаний", time);
+        clientController.runCommand("/remind");
+
+        try {
+            Thread.sleep(10 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals("Проверить работу напоминаний", clientController.getLastOutput());
     }
 }

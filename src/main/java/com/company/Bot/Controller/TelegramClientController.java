@@ -10,14 +10,20 @@ public class TelegramClientController implements ClientController {
 
     private final long userId;
     private final TaskController taskController;
+    private final ReminderController reminderController;
     private final TelegramBot bot;
     private final Map<String, Command> commands = new HashMap<>();
     private Command defaultCommand;
 
-    public TelegramClientController(long userId, TaskController taskController, TelegramBot bot) {
+    public TelegramClientController(long userId, TaskController taskController, ReminderController reminderController, TelegramBot bot) {
         this.userId = userId;
         this.taskController = taskController;
+        this.reminderController = reminderController;
         this.bot = bot;
+
+        ReminderWorker reminderWorker = new ReminderWorker(reminderController, this);
+        new Thread(reminderWorker::execute).start();
+
         setupCommands();
     }
 
@@ -37,11 +43,14 @@ public class TelegramClientController implements ClientController {
     private void setupCommands() {
         commands.put("/start", new Start(taskController, this));
         commands.put("/help", new Help(taskController, this));
-        commands.put("/create", new Create(taskController, this));
+        commands.put("/create", new CreateTask(taskController, this));
         commands.put("/list", new FullList(taskController, this));
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
+
+        commands.put("/remind", new CreateReminder(reminderController, this));
+
         defaultCommand = new DefaultCommand(taskController, this);
     }
 

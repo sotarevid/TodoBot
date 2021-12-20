@@ -1,4 +1,6 @@
 import com.company.Bot.Controller.ClientController;
+import com.company.Bot.Controller.ReminderController;
+import com.company.Bot.Controller.ReminderWorker;
 import com.company.Bot.Controller.TaskController;
 import com.company.Bot.Model.Command.*;
 
@@ -13,12 +15,17 @@ public class MockClientController implements ClientController {
     private String lastOutput;
 
     private final TaskController taskController;
+    private final ReminderController reminderController;
     private final Map<String, Command> commands = new HashMap<>();
     private Command defaultCommand;
     private long userID = Long.MAX_VALUE;
 
-    public MockClientController(TaskController taskController) {
+    public MockClientController(TaskController taskController, ReminderController reminderController) {
         this.taskController = taskController;
+        this.reminderController = reminderController;
+
+        ReminderWorker reminderWorker = new ReminderWorker(reminderController, this);
+        new Thread(reminderWorker::execute).start();
 
         setupCommands();
     }
@@ -41,11 +48,14 @@ public class MockClientController implements ClientController {
     private void setupCommands() {
         commands.put("/start", new Start(taskController, this));
         commands.put("/help", new Help(taskController, this));
-        commands.put("/create", new Create(taskController, this));
+        commands.put("/create", new CreateTask(taskController, this));
         commands.put("/list", new FullList(taskController, this));
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
+
+        commands.put("/remind", new CreateReminder(reminderController, this));
+
         defaultCommand = new DefaultCommand(taskController, this);
     }
 

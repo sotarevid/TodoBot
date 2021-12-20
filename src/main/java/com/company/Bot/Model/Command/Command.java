@@ -1,15 +1,22 @@
 package com.company.Bot.Model.Command;
 
 import com.company.Bot.Controller.ClientController;
+import com.company.Bot.Controller.ReminderController;
 import com.company.Bot.Controller.TaskController;
 
 public abstract class Command {
 
-    protected final TaskController taskController;
-    protected final ClientController clientController;
+    protected TaskController taskController;
+    protected ClientController clientController;
+    protected ReminderController reminderController;
 
     public Command(TaskController taskController, ClientController clientController) {
         this.taskController = taskController;
+        this.clientController = clientController;
+    }
+
+    public Command(ReminderController reminderController, ClientController clientController) {
+        this.reminderController = reminderController;
         this.clientController = clientController;
     }
 

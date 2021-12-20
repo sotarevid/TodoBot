@@ -10,13 +10,18 @@ import java.util.Scanner;
 public class ConsoleClientController implements ClientController {
 
     private final TaskController taskController;
+    private final ReminderController reminderController;
     private final Map<String, Command> commands = new HashMap<>();
     private final Scanner scanner = new Scanner(System.in);
     private Command defaultCommand;
     private long userId = Long.MAX_VALUE;
 
-    public ConsoleClientController(TaskController taskController) {
+    public ConsoleClientController(TaskController taskController, ReminderController reminderController) {
         this.taskController = taskController;
+        this.reminderController = reminderController;
+
+        ReminderWorker reminderWorker = new ReminderWorker(reminderController, this);
+        new Thread(reminderWorker::execute).start();
 
         setupCommands();
     }
@@ -27,11 +32,14 @@ public class ConsoleClientController implements ClientController {
     private void setupCommands() {
         commands.put("/start", new Start(taskController, this));
         commands.put("/help", new Help(taskController, this));
-        commands.put("/create", new Create(taskController, this));
+        commands.put("/create", new CreateTask(taskController, this));
         commands.put("/list", new FullList(taskController, this));
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
+
+        commands.put("/remind", new CreateReminder(reminderController, this));
+
         defaultCommand = new DefaultCommand(taskController, this);
     }
 

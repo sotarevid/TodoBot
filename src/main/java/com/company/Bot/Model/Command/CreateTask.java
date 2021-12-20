@@ -3,9 +3,9 @@ package com.company.Bot.Model.Command;
 import com.company.Bot.Controller.ClientController;
 import com.company.Bot.Controller.TaskController;
 
-public class Create extends Command {
+public class CreateTask extends Command {
 
-    public Create(TaskController taskController, ClientController clientController) {
+    public CreateTask(TaskController taskController, ClientController clientController) {
         super(taskController, clientController);
     }
 

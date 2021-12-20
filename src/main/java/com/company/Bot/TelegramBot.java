@@ -1,9 +1,6 @@
 package com.company.Bot;
 
-import com.company.Bot.Controller.ClientController;
-import com.company.Bot.Controller.DbTaskController;
-import com.company.Bot.Controller.TaskController;
-import com.company.Bot.Controller.TelegramClientController;
+import com.company.Bot.Controller.*;
 import org.hibernate.SessionFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -55,7 +52,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             else {
                 messageQueue.put(chatId, new ArrayDeque<>());
                 new Thread(() -> {
-                    new TelegramClientController(chatId, new DbTaskController(sessionFactory), this)
+                    new TelegramClientController(chatId, new DbTaskController(sessionFactory), new DbReminderController(sessionFactory), this)
                             .runCommand(message.getText());
 
                     synchronized (messageQueue) {
@@ -68,8 +65,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * Отправляет сообщение пользователю по userId
-     * @param userId
-     * @param message
      */
     public void sendMessage(Long userId, String message) {
         SendMessage response = new SendMessage();
