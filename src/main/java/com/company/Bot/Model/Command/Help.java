@@ -10,13 +10,14 @@ public class Help extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("""
                 /help - выводит это сообщение :)
                 /create - создаёт новую задачу
                 /list - показывает список всех задач
                 /category - показывает список всех задач в категории
                 /get - подробно показывает одну задачу
-                /delete - удаляет задачу""", createHelpKeyboard());
+                /delete - удаляет задачу
+                /remind - создаёт напоминание""", createHelpKeyboard());
     }
 }

@@ -13,7 +13,7 @@ public class Get extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Получить задачу по id или названию?", createReplyKeyBoard(true));
         String response = getNextMessage().toLowerCase();
 

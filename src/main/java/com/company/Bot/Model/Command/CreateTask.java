@@ -5,14 +5,14 @@ import com.company.Bot.Controller.TaskController;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
-public class Create extends Command {
+public class CreateTask extends Command {
 
-    public Create(TaskController taskController, ClientController clientController) {
+    public CreateTask(TaskController taskController, ClientController clientController) {
         super(taskController, clientController);
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Введите название задачи: ");
         String name = getNextMessage();
         sendMessage("Введите подробное описание задачи: ");

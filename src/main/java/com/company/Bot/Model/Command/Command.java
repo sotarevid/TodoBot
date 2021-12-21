@@ -1,6 +1,7 @@
 package com.company.Bot.Model.Command;
 
 import com.company.Bot.Controller.ClientController;
+import com.company.Bot.Controller.ReminderController;
 import com.company.Bot.Controller.TaskController;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -16,28 +17,38 @@ import java.util.List;
 
 public abstract class Command {
 
-    protected final TaskController taskController;
-    protected final ClientController clientController;
-    protected final long userId;
+    protected TaskController taskController;
+    protected ClientController clientController;
+    protected ReminderController reminderController;
 
     public Command(TaskController taskController, ClientController clientController) {
         this.taskController = taskController;
         this.clientController = clientController;
-        this.userId = clientController.getUserId();
     }
 
-    public abstract void execute();
+    public Command(ReminderController reminderController, ClientController clientController) {
+        this.reminderController = reminderController;
+        this.clientController = clientController;
+    }
 
+    public abstract void execute(long userId);
+
+    /**
+     * Передаёт сообщение контроллеру для последующей отправки
+     */
     public void sendMessage(String text) {
-        clientController.sendMessage(userId, text);
-    }
-
-    public String getNextMessage() {
-        return clientController.getNextMessage();
+        clientController.sendMessage(text);
     }
 
     public void sendMessage(String text, ReplyKeyboardMarkup keyboardMarkup) {
-        clientController.sendMessage(userId, text, keyboardMarkup);
+        clientController.sendMessage(text, keyboardMarkup);
+    }
+
+    /**
+     * Запрашивает у контроллера последнее полученное сообщение
+     */
+    public String getNextMessage() {
+        return clientController.getNextMessage();
     }
 
     public static ReplyKeyboardMarkup createReplyKeyBoard(boolean id) {
@@ -62,12 +73,14 @@ public abstract class Command {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
-        String[] commands = new String[]{"Создать задачу", "Список задач",
-                "Список задач по категории", "Посмотреть задачу", "Удалить задачу"};
+        String[] commands = new String[]{
+                "Создать задачу", "Список задач",
+                "Список задач по категории", "Посмотреть задачу",
+                "Удалить задачу", "Создать напоминание"};
         ArrayList<KeyboardRow> keyboardRows= new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (String command : commands) {
             KeyboardRow row = new KeyboardRow();
-            row.add(new KeyboardButton(commands[i]));
+            row.add(new KeyboardButton(command));
             keyboardRows.add(row);
         }
         replyKeyboardMarkup.setKeyboard(keyboardRows);

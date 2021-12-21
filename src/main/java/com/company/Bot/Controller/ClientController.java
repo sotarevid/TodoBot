@@ -4,10 +4,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 
 public interface ClientController {
 
-    long getUserId();
-
+    /**
+     * Возвращает последнее сообщение, полученное контроллером
+     */
     String getNextMessage();
 
+    /**
+     * Обрабатывает сообщение и исполняет соответствующую команду
+     */
     void runCommand(String message);
 
     /**
@@ -22,7 +26,9 @@ public interface ClientController {
      * Метод отправки сообщения пользователю.
      * Для использования в классах, реализующих общение с пользователем с использованием кнопок TelegramAPI
      */
-    default void sendMessage(long userId, String text, ReplyKeyboardMarkup keyboardMarkup) {
+    default void sendMessage(String text, ReplyKeyboardMarkup keyboardMarkup) {
         return;
     }
+
+    void sendMessage(String text);
 }

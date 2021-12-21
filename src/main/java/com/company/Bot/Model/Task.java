@@ -32,9 +32,11 @@ public class Task {
         return id;
     }
 
-    public Task setId(long id) {
+    /**
+     * Устанавливает новое значение id
+     */
+    public void setId(long id) {
         this.id = id;
-        return this;
     }
 
     /**
@@ -44,9 +46,11 @@ public class Task {
         return userId;
     }
 
-    public Task setUserId(long userId) {
+    /**
+     * Устанавливает новое значение userId
+     */
+    public void setUserId(long userId) {
         this.userId = userId;
-        return this;
     }
 
     /**
@@ -56,9 +60,11 @@ public class Task {
         return name;
     }
 
-    public Task setName(String name) {
+    /**
+     * Устанавливает новое значение name
+     */
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     /**
@@ -68,9 +74,11 @@ public class Task {
         return description;
     }
 
-    public Task setDescription(String description) {
+    /**
+     * Устанавливает новое значение description
+     */
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     /**
@@ -80,9 +88,11 @@ public class Task {
         return category;
     }
 
-    public Task setCategory(String category) {
+    /**
+     * Устанавливает новое значение category
+     */
+    public void setCategory(String category) {
         this.category = category;
-        return this;
     }
 
     @Override

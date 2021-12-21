@@ -1,9 +1,6 @@
 package com.company.Bot;
 
-import com.company.Bot.Controller.ClientController;
-import com.company.Bot.Controller.DbTaskController;
-import com.company.Bot.Controller.TaskController;
-import com.company.Bot.Controller.TelegramClientController;
+import com.company.Bot.Controller.*;
 import org.hibernate.SessionFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -21,8 +18,8 @@ import java.util.*;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final String token = "1671863119:AAEl8A2IiSzN1rMSd1kF4B_WMhLswSsuRfQ";
-    private final String username = "ushie_test_bot";
+    private final String token = System.getenv("TODO_BOT_TOKEN");
+    private final String username = System.getenv("TODO_BOT_USERNAME");
 
     private final Map<Long, Queue<String>> messageQueue = new HashMap<>();
 
@@ -30,8 +27,26 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public TelegramBot(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+
+        startReminderWorker();
     }
 
+    private void startReminderWorker() {
+        DbReminderController workerReminderController = new DbReminderController(sessionFactory);
+
+        TelegramClientController workerClientController = new TelegramClientController(
+                new DbTaskController(sessionFactory),
+                workerReminderController,
+                this
+        );
+
+        ReminderWorker reminderWorker = new ReminderWorker(workerReminderController, workerClientController);
+        new Thread(reminderWorker::execute).start();
+    }
+
+    /**
+     * Получает следующее сообщение от пользователя по userId
+     */
     public String getMessage(long userId) {
         synchronized (messageQueue) {
             if (messageQueue.containsKey(userId)) {
@@ -53,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             else {
                 messageQueue.put(chatId, new ArrayDeque<>());
                 new Thread(() -> {
-                    new TelegramClientController(chatId, new DbTaskController(sessionFactory), this)
+                    new TelegramClientController(chatId, new DbTaskController(sessionFactory), new DbReminderController(sessionFactory), this)
                             .runCommand(message.getText());
 
                     synchronized (messageQueue) {
@@ -64,6 +79,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Отправляет сообщение пользователю по userId
+     */
     public void sendMessage(Long userId, String message) {
         SendMessage response = new SendMessage();
         response.setChatId(userId.toString());
@@ -88,6 +106,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Устанавливает соединение с TelegramAPI и начинает слушать обновления
+     */
     public void connect() {
         TelegramBotsApi telegramBotsApi;
         try {

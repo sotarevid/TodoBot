@@ -1,6 +1,7 @@
 package com.company.Bot.Controller;
 
 import com.company.Bot.Model.Task;
+import org.hibernate.criterion.Example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,14 @@ public class ListTaskController implements TaskController {
 
     @Override
     public void create(long userId, String name, String description, String category) {
-        taskList.add(new Task()
-                .setId(nextId++)
-                .setName(name)
-                .setDescription(description)
-                .setCategory(category));
+        Task task = new Task();
+        task.setId(nextId++);
+        task.setUserId(userId);
+        task.setName(name);
+        task.setDescription(description);
+        task.setCategory(category);
+
+        taskList.add(task);
     }
 
     @Override
