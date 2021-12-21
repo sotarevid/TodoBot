@@ -27,6 +27,6 @@ public class FullList extends Command {
         if (builder.isEmpty())
             builder.append("Ничего нет!");
 
-        sendMessage(builder.toString());
+        sendMessage(builder.toString(), createHelpKeyboard());
     }
 }

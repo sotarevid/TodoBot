@@ -2,6 +2,7 @@ package com.company.Bot.Controller;
 
 import com.company.Bot.Model.Command.*;
 import com.company.Bot.TelegramBot;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,11 @@ public class TelegramClientController implements ClientController {
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
         commands.put("default", new Default(taskController, this));
+        commands.put("Создать задачу", new Create(taskController, this));
+        commands.put("Список задач", new FullList(taskController, this));
+        commands.put("Список задач по категории", new Category(taskController, this));
+        commands.put("Посмотреть задачу", new Get(taskController, this));
+        commands.put("Удалить задачу", new Delete(taskController, this));
     }
 
     @Override
@@ -57,5 +63,10 @@ public class TelegramClientController implements ClientController {
     @Override
     public void sendMessage(long userId, String text) {
         bot.sendMessage(userId, text);
+    }
+
+    @Override
+    public void sendMessage(long userId, String text, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        bot.sendMessage(userId, text, replyKeyboardMarkup);
     }
 }

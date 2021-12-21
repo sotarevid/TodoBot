@@ -17,6 +17,6 @@ public class Help extends Command {
                 /list - показывает список всех задач
                 /category - показывает список всех задач в категории
                 /get - подробно показывает одну задачу
-                /delete - удаляет задачу""");
+                /delete - удаляет задачу""", createHelpKeyboard());
     }
 }
