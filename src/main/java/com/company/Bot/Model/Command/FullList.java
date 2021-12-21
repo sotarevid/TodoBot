@@ -14,7 +14,7 @@ public class FullList extends Command {
 
     @Override
     public void execute() {
-        List<Task> tasks = taskController.getAll();
+        List<Task> tasks = taskController.getAll(userId);
         StringBuilder builder = new StringBuilder();
 
         for (Task task : tasks) {
@@ -24,6 +24,9 @@ public class FullList extends Command {
             builder.append(System.lineSeparator());
         }
 
-        sendResponse(builder.toString());
+        if (builder.isEmpty())
+            builder.append("Ничего нет!");
+
+        sendMessage(builder.toString());
     }
 }

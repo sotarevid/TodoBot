@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class ConsoleClientController implements ClientController {
 
+    private final long userId = Long.MAX_VALUE;
     private final TaskController taskController;
     private final Map<String, Command> commands = new HashMap<>();
     private final Scanner scanner = new Scanner(System.in);
@@ -27,6 +28,12 @@ public class ConsoleClientController implements ClientController {
         commands.put("/category", new Category(taskController, this));
         commands.put("/get", new Get(taskController, this));
         commands.put("/delete", new Delete(taskController, this));
+        commands.put("default", new Default(taskController, this));
+    }
+
+    @Override
+    public long getUserId() {
+        return userId;
     }
 
     @Override
@@ -37,7 +44,7 @@ public class ConsoleClientController implements ClientController {
     public void listen() {
         while (true) {
             runCommand(getNextMessage());
-            sendMessage(System.lineSeparator() + """
+            sendMessage(userId,System.lineSeparator() + """
                     ---------------------------------
                     Жду команду:\040""");
         }
@@ -45,12 +52,14 @@ public class ConsoleClientController implements ClientController {
 
     @Override
     public void runCommand(String message) {
-        Command command = commands.get(message);
-        command.execute();
+        if (commands.containsKey(message))
+            commands.get(message).execute();
+        else
+            commands.get("default").execute();
     }
 
     @Override
-    public void sendMessage(String text) {
+    public void sendMessage(long userId, String text) {
         System.out.print(text);
     }
 }
