@@ -14,7 +14,7 @@ public class Delete extends Command {
 
     @Override
     public void execute() {
-        sendMessage("Удалить задачу по id или названию? [I]d/[N]ame: ");
+        sendMessage("Удалить задачу по id или названию?", createReplyKeyBoard(true));
         String response = getNextMessage().toLowerCase();
 
         if (response.length() == 0 || (response.toCharArray()[0] != 'i' && response.toCharArray()[0] != 'n'))
@@ -58,5 +58,6 @@ public class Delete extends Command {
                 }
             }
         }
+        sendMessage("Жду новых указаний :)", createHelpKeyboard());
     }
 }

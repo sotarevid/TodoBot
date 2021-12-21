@@ -11,6 +11,6 @@ public class Default extends Command {
 
     @Override
     public void execute() {
-        sendMessage("Не понял. Может, стоит попробовать /help? :)");
+        sendMessage("Не понял. Вот список команд: :)", createHelpKeyboard());
     }
 }

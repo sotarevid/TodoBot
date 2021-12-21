@@ -10,18 +10,19 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final String token = "5027949483:AAHDKIejFNZ-UFPvbBxgYl8zomqQwiHrerE";
-    private final String username = "oop_todo_bot";
+    private final String token = "1671863119:AAEl8A2IiSzN1rMSd1kF4B_WMhLswSsuRfQ";
+    private final String username = "ushie_test_bot";
 
     private final Map<Long, Queue<String>> messageQueue = new HashMap<>();
 
@@ -67,7 +68,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage response = new SendMessage();
         response.setChatId(userId.toString());
         response.setText(message);
+        response.setReplyMarkup(new ReplyKeyboardRemove(true));
+        try {
+            execute(response);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void sendMessage(Long userId, String message, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage response = new SendMessage();
+        response.setChatId(userId.toString());
+        response.setText(message);
+        response.setReplyMarkup(replyKeyboardMarkup);
         try {
             execute(response);
         } catch (TelegramApiException e) {

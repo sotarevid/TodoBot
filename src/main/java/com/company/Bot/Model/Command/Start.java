@@ -11,6 +11,6 @@ public class Start extends Command {
 
     @Override
     public void execute() {
-        sendMessage("Привет, я Todo-bot! Введи \"/help\", чтобы получить справку.");
+        sendMessage("Привет, я Todo-bot! Вот мои команды:", createHelpKeyboard());
     }
 }
