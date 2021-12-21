@@ -74,9 +74,9 @@ public abstract class Command {
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         String[] commands = new String[]{
-                "Создать задачу", "Список задач",
-                "Список задач по категории", "Посмотреть задачу",
-                "Удалить задачу", "Создать напоминание"};
+                "\u2712 Создать задачу", "\uD83D\uDCD9 Список задач",
+                "\uD83D\uDCDA Список задач по категории", "\uD83D\uDC40 Посмотреть задачу",
+                "\u274C Удалить задачу", "\u23F0 Создать напоминание"};
         ArrayList<KeyboardRow> keyboardRows= new ArrayList<>();
         for (String command : commands) {
             KeyboardRow row = new KeyboardRow();

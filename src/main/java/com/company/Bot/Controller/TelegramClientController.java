@@ -57,13 +57,12 @@ public class TelegramClientController implements ClientController {
         commands.put("/delete", new Delete(taskController, this));
         commands.put("/remind", new CreateReminder(reminderController, this));
 
-        commands.put("Создать задачу", new CreateTask(taskController, this));
-        commands.put("Список задач", new FullList(taskController, this));
-        commands.put("Список задач по категории", new Category(taskController, this));
-        commands.put("Посмотреть задачу", new Get(taskController, this));
-        commands.put("Удалить задачу", new Delete(taskController, this));
-        commands.put("Создать напоминание", new CreateReminder(reminderController, this));
-
+        commands.put("\u2712 Создать задачу", new CreateTask(taskController, this));
+        commands.put("\uD83D\uDCD9 Список задач", new FullList(taskController, this));
+        commands.put("\uD83D\uDCDA Список задач по категории", new Category(taskController, this));
+        commands.put("\uD83D\uDC40 Посмотреть задачу", new Get(taskController, this));
+        commands.put("\u274C Удалить задачу", new Delete(taskController, this));
+        commands.put("\u23F0 Создать напоминание", new CreateReminder(reminderController, this));
 
         defaultCommand = new DefaultCommand(taskController, this);
     }
