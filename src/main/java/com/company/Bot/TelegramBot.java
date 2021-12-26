@@ -1,27 +1,25 @@
 package com.company.Bot;
 
-import com.company.Bot.Controller.ClientController;
-import com.company.Bot.Controller.DbTaskController;
-import com.company.Bot.Controller.TaskController;
-import com.company.Bot.Controller.TelegramClientController;
+import com.company.Bot.Controller.*;
 import org.hibernate.SessionFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final String token = "5027949483:AAHDKIejFNZ-UFPvbBxgYl8zomqQwiHrerE";
-    private final String username = "oop_todo_bot";
+    private final String token = System.getenv("TODO_BOT_TOKEN");
+    private final String username = System.getenv("TODO_BOT_USERNAME");
 
     private final Map<Long, Queue<String>> messageQueue = new HashMap<>();
 
@@ -29,8 +27,26 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public TelegramBot(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+
+        startReminderWorker();
     }
 
+    private void startReminderWorker() {
+        DbReminderController workerReminderController = new DbReminderController(sessionFactory);
+
+        TelegramClientController workerClientController = new TelegramClientController(
+                new DbTaskController(sessionFactory),
+                workerReminderController,
+                this
+        );
+
+        ReminderWorker reminderWorker = new ReminderWorker(workerReminderController, workerClientController);
+        new Thread(reminderWorker::execute).start();
+    }
+
+    /**
+     * Получает следующее сообщение от пользователя по userId
+     */
     public String getMessage(long userId) {
         synchronized (messageQueue) {
             if (messageQueue.containsKey(userId)) {
@@ -52,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             else {
                 messageQueue.put(chatId, new ArrayDeque<>());
                 new Thread(() -> {
-                    new TelegramClientController(chatId, new DbTaskController(sessionFactory), this)
+                    new TelegramClientController(chatId, new DbTaskController(sessionFactory), new DbReminderController(sessionFactory), this)
                             .runCommand(message.getText());
 
                     synchronized (messageQueue) {
@@ -63,11 +79,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Отправляет сообщение пользователю по userId
+     */
     public void sendMessage(Long userId, String message) {
         SendMessage response = new SendMessage();
         response.setChatId(userId.toString());
         response.setText(message);
-
+        response.setReplyMarkup(new ReplyKeyboardRemove(true));
         try {
             execute(response);
         } catch (TelegramApiException e) {
@@ -75,6 +94,21 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    public void sendMessage(Long userId, String message, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage response = new SendMessage();
+        response.setChatId(userId.toString());
+        response.setText(message);
+        response.setReplyMarkup(replyKeyboardMarkup);
+        try {
+            execute(response);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Устанавливает соединение с TelegramAPI и начинает слушать обновления
+     */
     public void connect() {
         TelegramBotsApi telegramBotsApi;
         try {

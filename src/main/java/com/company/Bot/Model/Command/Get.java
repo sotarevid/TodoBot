@@ -13,8 +13,8 @@ public class Get extends Command {
     }
 
     @Override
-    public void execute() {
-        sendMessage("Получить задачу по id или названию? [I]d/[N]ame: ");
+    public void execute(long userId) {
+        sendMessage("Получить задачу по id или названию?", createReplyKeyBoard(true));
         String response = getNextMessage().toLowerCase();
 
         if (response.length() == 0 || (response.toCharArray()[0] != 'i' && response.toCharArray()[0] != 'n'))
@@ -64,6 +64,7 @@ public class Get extends Command {
                 }
             }
         }
+        sendMessage("Жду новых указаний :)", createHelpKeyboard());
     }
 
     private String generateResponse(Task task) {

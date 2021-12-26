@@ -13,7 +13,7 @@ public class Category extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         sendMessage("Введите название категории (или нажмите Enter для отображения задач без категории): ");
         String response = getNextMessage();
         String category = response.equals("") ? null : response;
@@ -31,6 +31,6 @@ public class Category extends Command {
         if (builder.isEmpty())
             builder.append("Ничего нет!");
 
-        sendMessage(builder.toString());
+        sendMessage(builder.toString(), createHelpKeyboard());
     }
 }

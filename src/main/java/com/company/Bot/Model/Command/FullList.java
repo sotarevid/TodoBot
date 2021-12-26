@@ -13,7 +13,7 @@ public class FullList extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(long userId) {
         List<Task> tasks = taskController.getAll(userId);
         StringBuilder builder = new StringBuilder();
 
@@ -27,6 +27,6 @@ public class FullList extends Command {
         if (builder.isEmpty())
             builder.append("Ничего нет!");
 
-        sendMessage(builder.toString());
+        sendMessage(builder.toString(), createHelpKeyboard());
     }
 }
